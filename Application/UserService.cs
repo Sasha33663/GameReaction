@@ -17,30 +17,34 @@ public partial class UserService : IUserService
 
     public async Task<User> UserCreateServiceAsync(string name, decimal moneyAmount)
     {
-        var newUser = new User
+       
+        var newUser = new User(Guid.NewGuid())
         {
             UserName = name,
-            UserId = Guid.NewGuid(),
+            
             MoneyAmount = moneyAmount,
-            Games = []
+            Games = new List<Game>()
+
         };
+       
         await _userRepository.UserCreateInRepositoryAsync(newUser);
         return newUser;
     }
 
-    public async Task<Game> GameCreateServiceAsync(string name, string description, decimal price, int gameAmount, byte gamePreview, Guid gameId)
+    public async Task<Game> GameCreateServiceAsync(string name, string description, decimal price, int gameAmount, byte gamePreview,Guid userId)
     {
-        var newGame = new Game
+        
+       var newGame = new Game
         {
             Name = name,
             Description = description,
             Price = price,
             GamesAmount = gameAmount,
             GameId = Guid.NewGuid(),
-
+           UserId = userId,
             GamePreview = gamePreview
         };
-        await _gameRepository.AddGameInRepositoryAsync(newGame);
+await _gameRepository.AddGameInRepositoryAsync(newGame);
         return newGame;
     }
 }
