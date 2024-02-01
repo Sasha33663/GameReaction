@@ -31,7 +31,7 @@ public partial class UserService : IUserService
         return newUser;
     }
 
-    public async Task<Game> GameCreateServiceAsync(string name, string description, decimal price, int gameAmount, byte gamePreview,Guid userId)
+    public async Task<Game> GameCreateServiceAsync(string name, string description, decimal price, int gameAmount, byte[] gamePreview, Guid userId)
     {
         
        var newGame = new Game
@@ -42,7 +42,7 @@ public partial class UserService : IUserService
             GamesAmount = gameAmount,
             GameId = Guid.NewGuid(),
            UserId = userId,
-            GamePreview = gamePreview
+          GamePreview = gamePreview
         };
 await _gameRepository.AddGameInRepositoryAsync(newGame);
         return newGame;
