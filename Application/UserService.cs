@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Infrastructure.Repositories.GameRepository;
 using Infrastructure.Rerositories.UserRepository;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Application;
 
@@ -31,20 +32,46 @@ public partial class UserService : IUserService
         return newUser;
     }
 
-    public async Task<Game> GameCreateServiceAsync(string name, string description, decimal price, int gameAmount, byte[] gamePreview, Guid userId)
+    public async Task<Game> GameCreateServiceAsync(string name, string description, decimal price, int gameAmount,  byte[] gamePreview, Guid userId)
     {
         
        var newGame = new Game
         {
-            Name = name,
+
+           Name = name,
             Description = description,
             Price = price,
             GamesAmount = gameAmount,
             GameId = Guid.NewGuid(),
-           UserId = userId,
-          GamePreview = gamePreview
+            UserId = userId,
+            GamePreview = gamePreview,
+           
         };
-await _gameRepository.AddGameInRepositoryAsync(newGame);
+        
+        await _gameRepository.AddGameInRepositoryAsync(newGame);
         return newGame;
+    }
+    public async Task<int> CreateLike(int like, Guid gameId, Guid userId)
+    {
+        bool likedGameStatus =false ;
+        int likedGame=+0;
+        if (like == 1)
+        {
+            likedGameStatus = true ;
+            
+        }
+        else if (like == 0)
+        {
+           likedGameStatus= false ;
+           
+        }
+        if ( likedGameStatus == true) 
+        {
+            
+            return (await _gameRepository.MakeLikeInRepositoryAsync(likedGame + 1));
+        }
+      
+        return likedGame;
+        
     }
 }

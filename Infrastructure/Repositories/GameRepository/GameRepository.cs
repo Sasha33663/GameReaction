@@ -16,4 +16,15 @@ public partial class GameRepository : IGameRepository
         await _gameDatabase.Games.AddAsync(game);
         await _gameDatabase.SaveChangesAsync();
     }
+    public async Task<int> MakeLikeInRepositoryAsync (int likedGame)
+    {
+        var Game = new Game
+        {
+            Likes = likedGame
+        };
+        await _gameDatabase.Games.Likes.AddAsync(likedGame);
+        await _gameDatabase.SaveChangesAsync();
+
+        return 1;
+    }
 }

@@ -3,6 +3,7 @@ using Infrastructure.Repositories;
 using Infrastructure.Repositories.GameRepository;
 using Infrastructure.Rerositories.UserRepository;
 using Microsoft.EntityFrameworkCore;
+//using Presentation.Middlewares;
 
 namespace Web
 {
@@ -22,6 +23,7 @@ namespace Web
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IGameRepository, GameRepository>();
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,6 +32,7 @@ namespace Web
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            //app.UseLikesDislikesMiddleware();
 
             app.UseHttpsRedirection();
 

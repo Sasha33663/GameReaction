@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Dto;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Presentation.Conrollers;
 
@@ -20,10 +21,10 @@ public class GameController : Controller
 
     public async Task<IActionResult> Create([FromForm] GameDto gameDto)
     {
-
+       
         byte[] previewBytes = null;
 
-
+       
         if (gameDto.gamePreview != null)
         {
            
@@ -37,5 +38,10 @@ public class GameController : Controller
 
         return Json(await _userService.GameCreateServiceAsync(gameDto.name, gameDto.description, gameDto.price, gameDto.gamesAmount, previewBytes, gameDto.userId));
 
+    }
+    [HttpPost("like")]
+    public async Task <IActionResult> Like([FromForm]LikeDto likeDto)
+    {
+        return Json(await _userService.CreateLike(likeDto.likes, likeDto.userId, likeDto.gameId));
     }
 }
