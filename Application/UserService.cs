@@ -51,27 +51,35 @@ public partial class UserService : IUserService
         await _gameRepository.AddGameInRepositoryAsync(newGame);
         return newGame;
     }
-    public async Task<int> CreateLike(int like, Guid gameId, Guid userId)
+    public async Task  CreateLike(int like, Guid gameId)
     {
-        bool likedGameStatus =false ;
-        int likedGame=+0;
-        if (like == 1)
-        {
-            likedGameStatus = true ;
-            
-        }
-        else if (like == 0)
-        {
-           likedGameStatus= false ;
-           
-        }
-        if ( likedGameStatus == true) 
-        {
-            
-            return (await _gameRepository.MakeLikeInRepositoryAsync(likedGame + 1));
-        }
-      
-        return likedGame;
+        var game = await _gameRepository.GetByIdAsync(gameId);
         
+        game.Likes += like;
+        if (like != 1 )
+        {
+
+            throw new Exception("Лайк может рaвняться только 1 ");
+        }
+        else
+        {
+            await _gameRepository.UpdateAsync(game);
+        }
     }
+    public async Task CreateDislike(int dislike, Guid gameId)
+    {
+        var game = await _gameRepository.GetByIdAsync(gameId);
+
+        game.Dislikes += dislike;
+        if (dislike != 1)
+        {
+
+            throw new Exception("Дизлайк может рaвняться только 1 ");
+        }
+        else
+        {
+            await _gameRepository.UpdateAsync(game);
+        }
+    }
+
 }

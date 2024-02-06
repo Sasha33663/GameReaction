@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.GameRepository;
 
@@ -16,15 +17,14 @@ public partial class GameRepository : IGameRepository
         await _gameDatabase.Games.AddAsync(game);
         await _gameDatabase.SaveChangesAsync();
     }
-    public async Task<int> MakeLikeInRepositoryAsync (int likedGame)
+    public async Task<Game?> GetByIdAsync(Guid gameId)
     {
-        var Game = new Game
-        {
-            Likes = likedGame
-        };
-        await _gameDatabase.Games.Likes.AddAsync(likedGame);
+        return await _gameDatabase.Games.FirstOrDefaultAsync(x => x.GameId == gameId);
+    
+     }
+    public async Task UpdateAsync(Game game)
+    {
+        _gameDatabase.Games.Update(game);
         await _gameDatabase.SaveChangesAsync();
-
-        return 1;
     }
 }

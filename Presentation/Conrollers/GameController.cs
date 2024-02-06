@@ -1,4 +1,5 @@
 ﻿using Application;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Dto;
 using System.IO;
@@ -40,8 +41,15 @@ public class GameController : Controller
 
     }
     [HttpPost("like")]
-    public async Task <IActionResult> Like([FromForm]LikeDto likeDto)
-    {
-        return Json(await _userService.CreateLike(likeDto.likes, likeDto.userId, likeDto.gameId));
+    public async Task Like ([FromForm]LikeDto likeDto) 
+    { 
+        await _userService.CreateLike(likeDto.likes, likeDto.gameId);  
+        
     }
+    [HttpPost("dislike")]
+    public async Task Dislike([FromForm]DislikeDto dislikeDto)
+    {
+        await _userService.CreateDislike(dislikeDto.dislikes, dislikeDto.gameId);
+    }
+    
 }

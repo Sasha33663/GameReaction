@@ -5,4 +5,5 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Presentation.Dto;
-public record LikeDto(int likes, Guid gameId);
+public record DislikeDto (int dislikes, Guid gameId);
+
