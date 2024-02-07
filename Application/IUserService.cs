@@ -10,5 +10,6 @@ namespace Application
         Task<Game> GameCreateServiceAsync(string name, string description, decimal price, int gameAmount, byte [] gamePreview, Guid userId);
         Task CreateLike (int likes, Guid gameId);
         Task CreateDislike (int dislikes, Guid gameId);
+        Task DoBuyAsync (Guid gameId, Guid userId);
     }
 }

@@ -51,5 +51,9 @@ public class GameController : Controller
     {
         await _userService.CreateDislike(dislikeDto.dislikes, dislikeDto.gameId);
     }
-    
+    [HttpPost("buy")]
+    public async Task Buy([FromForm]BuyDto buyDto)
+    {
+        await _userService.DoBuyAsync(buyDto.gameId, buyDto.userId);
+    }
 }

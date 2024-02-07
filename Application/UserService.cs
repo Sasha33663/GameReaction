@@ -2,6 +2,7 @@
 using Infrastructure.Repositories.GameRepository;
 using Infrastructure.Rerositories.UserRepository;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System.Data;
 
 namespace Application;
 
@@ -53,7 +54,7 @@ public partial class UserService : IUserService
     }
     public async Task  CreateLike(int like, Guid gameId)
     {
-        var game = await _gameRepository.GetByIdAsync(gameId);
+        var game = await _gameRepository.GetGameByIdAsync(gameId);
         
         game.Likes += like;
         if (like != 1 )
@@ -68,18 +69,35 @@ public partial class UserService : IUserService
     }
     public async Task CreateDislike(int dislike, Guid gameId)
     {
-        var game = await _gameRepository.GetByIdAsync(gameId);
+        var game = await _gameRepository.GetGameByIdAsync(gameId);
 
         game.Dislikes += dislike;
         if (dislike != 1)
         {
 
-            throw new Exception("Дизлайк может рaвняться только 1 ");
+            throw new Exception("Дизлайк может рaвняться только 1");
         }
         else
         {
             await _gameRepository.UpdateAsync(game);
         }
+    }
+    public async Task DoBuyAsync(Guid gameId, Guid userId)
+    {
+        var user = await _userRepository.GetUserByIdAsync(userId);
+        var game = await _gameRepository.GetGameByIdAsync(gameId);
+        if (user.MoneyAmount< game.Price)
+        {
+            throw new Exception("Не хватает средств");
+        }
+        if (game.GamesAmount <= 0)
+        {
+            throw new Exception("На складе не достаточно игр");
+        }
+        user.MoneyAmount -= game.Price;
+        game.GamesAmount -= 1;
+        await _gameRepository.UpdateAsync(game);
+        await _userRepository.UpdateAsync(user);
     }
 
 }

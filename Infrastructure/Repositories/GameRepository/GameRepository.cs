@@ -17,11 +17,12 @@ public partial class GameRepository : IGameRepository
         await _gameDatabase.Games.AddAsync(game);
         await _gameDatabase.SaveChangesAsync();
     }
-    public async Task<Game?> GetByIdAsync(Guid gameId)
+    public async Task<Game?> GetGameByIdAsync(Guid gameId)
     {
         return await _gameDatabase.Games.FirstOrDefaultAsync(x => x.GameId == gameId);
     
-     }
+    }
+    
     public async Task UpdateAsync(Game game)
     {
         _gameDatabase.Games.Update(game);
