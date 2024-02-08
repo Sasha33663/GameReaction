@@ -1,7 +1,9 @@
-﻿using Domain;
+﻿using Application.Dto;
+using Domain;
 using Infrastructure.Repositories.GameRepository;
 using Infrastructure.Rerositories.UserRepository;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.Extensions.Options;
 using System.Data;
 
 namespace Application;
@@ -82,11 +84,25 @@ public partial class UserService : IUserService
             await _gameRepository.UpdateAsync(game);
         }
     }
-    public async Task DoBuyAsync(Guid gameId, Guid userId)
+    public async Task DoBuyAsync( Guid userId, Guid gameId, int count)
     {
         var user = await _userRepository.GetUserByIdAsync(userId);
         var game = await _gameRepository.GetGameByIdAsync(gameId);
-        if (user.MoneyAmount< game.Price)
+        if (user.MoneyAmount < game.Price)
+        {
+            throw new Exception("Не хватает средств");
+        }
+        if (count <= 0)
+        {
+            throw new Exception("Нельзя купить 0 игр");
+            
+        }
+        if (count > game.GamesAmount)
+        {
+            throw new Exception("На складе не достаточно игр");
+
+        }
+        if (count * game.Price > user.MoneyAmount) 
         {
             throw new Exception("Не хватает средств");
         }
@@ -95,9 +111,16 @@ public partial class UserService : IUserService
             throw new Exception("На складе не достаточно игр");
         }
         user.MoneyAmount -= game.Price;
-        game.GamesAmount -= 1;
+        game.GamesAmount -= count;
         await _gameRepository.UpdateAsync(game);
         await _userRepository.UpdateAsync(user);
+    }
+    public async Task DoBuyAsync (Guid userId, IEnumerable<BuyGameDto> buyGameDto)
+    {
+        foreach (var item  in buyGameDto)
+        {
+            await DoBuyAsync(userId, item.gameId,item.count);
+        }
     }
 
 }
