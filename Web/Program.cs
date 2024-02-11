@@ -1,7 +1,9 @@
 using Application;
+using Domain;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.GameRepository;
 using Infrastructure.Rerositories.UserRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 //using Presentation.Middlewares;
 
@@ -23,7 +25,10 @@ namespace Web
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IGameRepository, GameRepository>();
-            
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+              .AddEntityFrameworkStores<Database>();
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -33,7 +38,7 @@ namespace Web
                 app.UseSwaggerUI();
             }
             //app.UseLikesDislikesMiddleware();
-
+            app.MapIdentityApi<IdentityUser>();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

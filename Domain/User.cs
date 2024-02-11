@@ -1,6 +1,8 @@
-﻿namespace Domain
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Domain
 {
-    public class User
+    public class User : IdentityUser <Guid>
     {
         public string UserName { get; set; }
         public Guid UserId { get; set; }
